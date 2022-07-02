@@ -12,16 +12,15 @@
 </head>
 
 <body>
-    <!-- Buttons -->
-    <div>
-        <h3 class="text-center">
-            <button id="cluster">
-                Cluster
-            </button>
-            <button id="vac_status">
-                Vaccination Status
-            </button>
-        </h3>
+
+    <h3 class="text-center">
+        <button id="cluster">
+            Cluster
+        </button>
+        <button id="vac_status">
+            Vaccination Status
+        </button>
+
     </div>
 
     <!-- Graph -->
@@ -35,7 +34,7 @@
             .attr("viewBox", "0 0 " + width + " " + height)
 
         // Load external data
-        Promise.all([d3.json("data/links-sample.json"), d3.json("data/cases-sample.json")]).then(data => {
+        Promise.all([d3.json("https://chi-loong.github.io/CSC3007/assignments/links-sample.json"), d3.json("https://chi-loong.github.io/CSC3007/assignments/cases-sample.json")]).then(data => {
 
             let g_0 = []
             let g_1 = []
