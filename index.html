@@ -12,12 +12,12 @@
 </head>
 
 <body>
-        <button id="cluster">
-            Cluster
-        </button>
-        <button id="vac_status">
-            Vaccination Status
-        </button>
+    <button id="cluster">
+        Cluster
+    </button>
+    <button id="vac_status">
+        Vaccination Status
+    </button>
 
     </div>
 
@@ -43,14 +43,14 @@
             });
 
             // Classify Cluster
-            let count = 0
+            let i = 0
             data[1].forEach(d => {
-                if (count < 10) {
+                if (i < 10) {
                     d.class = 0
                 } else {
                     d.class = 1
                 }
-                count++
+                i++
             })
 
             console.log(data[0]); //links
@@ -62,29 +62,14 @@
                 .data(data[1])
                 .enter()
                 .append("circle")
-                .attr("r", 25)
+                .attr("r", 20)
                 .style("fill", function (d) { if (d.gender == 'male') { return "steelblue" } else { return "pink" } })
                 .attr("fill", "url(#image)")
                 .call(d3.drag()
                     .on("start", dragstarted)
                     .on("drag", dragged)
                     .on("end", dragended))
-                .on("mouseover", (event, d) => {
-                    d3.select(".tooltip")
-                        .html("Age: " + d.age + "<br>Gender: " + d.gender.charAt(0).toUpperCase() + "<br>Nationality: " + d.nationality + "<br>Occupation: " + d.occupation + "<br>Organization: " + d.organization + "<br>Vaccination Status: " + d.vaccinated)
-                        .style("position", "absolute")
-                        .style("background", "#fff")
-                        .style("left", (event.pageX) + "px")
-                        .style("top", (event.pageY) + "px")
-                        .style("border", "solid")
-                        .style("border-width", "3px")
-                        .style("border-radius", "5px")
-                        .style("padding", "10px")
-                        .style("opacity", 1);
-
-                    let path = d3.select(event.currentTarget)
-                    path.style("stroke", "orange").style("stroke-width", 2);
-                })
+                .on("mouseover", mouseover)
                 .on("mouseout", (event, d) => {
                     d3.select(".tooltip")
                         .text("")
@@ -178,6 +163,26 @@
                     .alphaTarget(0.3)
                     .restart();
             })
+
+            var Tooltip = d3.select("body")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("position", "absolute")
+                .style("background-color", "lightgreen")
+                .style("border", "solid")
+                .style("border-color", "red")
+                .style("border-width", "2px")
+                .style("border-radius", "5px")
+                .style("padding", "5px");
+
+            var mouseover = function (d) {
+                Tooltip.style("opacity", 1);
+                d3.select(this)
+                    .style("stroke", "red")
+                    .style("opacity", 1)
+                    .style("stroke-width", 3);
+            };
         })
     </script>
 
