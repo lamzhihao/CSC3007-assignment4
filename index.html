@@ -56,6 +56,10 @@
             console.log(data[0]); //links
             console.log(data[1]); //cases
 
+            let colours = d3.scaleOrdinal()
+        .domain([0, 1])
+        .range(["steelblue", "pink"]);
+
             let node = svg.append("g")
                 .attr("id", "nodes")
                 .selectAll("circle")
@@ -63,7 +67,7 @@
                 .enter()
                 .append("circle")
                 .attr("r", 20)
-                .style("fill", function (d) { if (d.gender == 'male') { return "steelblue" } else { return "pink" } })
+                .style("fill", function (d) { if (d.gender == 'male') { return colour(0) } else { return colorScale(1) } })
                 .attr("fill", "url(#image)")
                 .call(d3.drag()
                     .on("start", dragstarted)
