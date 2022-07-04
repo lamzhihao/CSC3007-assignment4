@@ -67,7 +67,7 @@
                 .enter()
                 .append("circle")
                 .attr("r", 20)
-                .style("fill", function (d) { if (d.gender == 'male') { return colour(0) } else { return colour(1) } })
+                .style("fill", function (d) { if (d.gender == 'male') { return colours(0) } else { return colours(1) } })
                 .attr("fill", "url(#image)")
                 .call(d3.drag()
                     .on("start", dragstarted)
