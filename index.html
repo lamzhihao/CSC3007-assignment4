@@ -21,7 +21,6 @@
 
     </div>
 
-    <!-- Graph -->
     <svg></svg>
     <div class="tooltip"></div>
 
@@ -31,18 +30,15 @@
         let svg = d3.select("svg")
             .attr("viewBox", "0 0 " + width + " " + height)
 
-        // Load external data
         Promise.all([d3.json("https://chi-loong.github.io/CSC3007/assignments/links-sample.json"), d3.json("https://chi-loong.github.io/CSC3007/assignments/cases-sample.json")]).then(data => {
 
             let g_0 = []
             let g_1 = []
-            // Data preprocessing
             data[0].forEach(e => {
                 e.source = e.infector;
                 e.target = e.infectee;
             });
 
-            // Classify Cluster
             let i = 0
             data[1].forEach(d => {
                 if (i < 10) {
@@ -53,8 +49,8 @@
                 i++
             })
 
-            console.log(data[0]); //links
-            console.log(data[1]); //cases
+            console.log(data[0]); 
+            console.log(data[1]); 
 
             let colours = d3.scaleOrdinal()
         .domain([0, 1])
@@ -67,13 +63,29 @@
                 .enter()
                 .append("circle")
                 .attr("r", 20)
-                .style("fill", function (d) { if (d.gender == 'male') { return colours(0) } else { return colours(1) } })
+                .style("fill", d => { if (d.gender == 'male') { return colours(0) } else { return colours(1) } })
                 .attr("fill", "url(#image)")
                 .call(d3.drag()
                     .on("start", dragstarted)
                     .on("drag", dragged)
                     .on("end", dragended))
-                .on("mouseover", mouseover)
+                    .on("mouseover", (event, d) => {
+            d3.select(".tooltip")
+                .html("Age: " + d.age + "<br>Gender: " + d.gender.charAt(0).toUpperCase() + "<br>Nationality: " + d.nationality + "<br>Occupation: " + d.occupation + "<br>Organization: " + d.organization + "<br>Vaccination Status: " + d.vaccinated)
+                .style("position", "absolute")
+                .style("background", "#fff")
+                .style("font-size", "25px")
+                .style("left", (event.pageX) + "px")
+                .style("top", (event.pageY) + "px")
+                .style("border", "solid")
+                .style("border-width", "3px")
+                .style("border-radius", "5px")
+                .style("padding", "10px")
+                .style("opacity", 1);
+
+            let path = d3.select(event.currentTarget)
+            path.style("stroke", "orange").style("stroke-width", 2);
+        })
                 .on("mouseout", (event, d) => {
                     d3.select(".tooltip")
                         .text("")
@@ -83,7 +95,6 @@
                     path.style("stroke", "#fff").style("stroke-width", 0.5);
                 })
 
-            // Adding image href for nodes
             node.append("image")
                 .data(data[1])
                 .attr("xlink:href", function (d) { if (d.gender == 'male') { return "icon/male.png" } else { return "icon/female.png" } })
@@ -109,17 +120,14 @@
                 d.fy = null;
             }
 
-            // Creating scale for cluster
             let xPosition = d3.scaleOrdinal()
                 .domain([0, 1])
                 .range([100, 600]);
 
-            // Creating scale for vaccination status
             let vaccinationScale = d3.scaleOrdinal()
                 .domain([0, 1, 2])
                 .range([100, 300, 600]);
 
-            // Creating linkage between nodes
             let linkpath = svg.append("g")
                 .attr("id", "links")
                 .selectAll("path")
@@ -129,7 +137,6 @@
                 .attr("fill", "none")
                 .attr("stroke", "black")
 
-            // Default force diagram (Same as cluster)
             let simulation = d3.forceSimulation()
                 .nodes(data[1])
                 .force("x", d3.forceX().strength(0.1).x(function (d) { return xPosition(d.class) }))
@@ -146,7 +153,6 @@
                         .attr("d", d => "M" + d.source.x + "," + d.source.y + " " + d.target.x + "," + d.target.y);
                 })
 
-            // Force diagram when 'Vaccation Status' button is pressed
             d3.select("#vaccination").on("click", function () {
                 simulation
                     .force("x", d3.forceX().strength(0.5).x(d => vaccinationScale(d.vaccinated)))
@@ -157,7 +163,6 @@
                     .restart();
             })
 
-            // Force diagram when 'Cluster' button is pressed
             d3.select("#cluster").on("click", function () {
                 simulation
                     .force("x", d3.forceX().strength(0.5).x(d => xPosition(d.class)))
