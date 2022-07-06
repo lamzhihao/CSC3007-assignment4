@@ -13,10 +13,10 @@
 
 <body>
     <button id="cluster">
-        Cluster
+        Group by Cluster
     </button>
     <button id="vaccination">
-        Vaccination Status
+        Group by Vaccination Status
     </button>
 
     </div>
@@ -83,7 +83,7 @@
                 .style("opacity", 1);
 
             let path = d3.select(event.currentTarget)
-            path.style("stroke", "orange").style("stroke-width", 2);
+            path.style("stroke", "black").style("stroke-width", 2);
         })
                 .on("mouseout", (event, d) => {
                     d3.select(".tooltip")
