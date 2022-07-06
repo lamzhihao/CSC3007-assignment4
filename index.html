@@ -53,8 +53,7 @@
             console.log(data[1]); 
 
             let colours = d3.scaleOrdinal()
-        .domain([0, 1])
-        .range(["steelblue", "pink"]);
+        .domain([0, 1]);
 
             let node = svg.append("g")
                 .attr("id", "nodes")
